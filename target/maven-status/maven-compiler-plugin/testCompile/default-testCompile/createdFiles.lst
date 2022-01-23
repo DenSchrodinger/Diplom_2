@@ -1,8 +1,0 @@
-TestForUserAuthorization.class
-TestForUserAuthorizationNegative.class
-TestForUserRegistrationNegative.class
-TestForUserChange.class
-TestForUserRegistration.class
-TestForOrders.class
-TestForOrdersNegative.class
-TestForUserChangeNegative.class
