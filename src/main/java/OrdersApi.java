@@ -4,13 +4,13 @@ import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import static io.restassured.RestAssured.given;
 
-public class MethodsForOrders extends RASpecs {
+public class OrdersApi extends RASpecs{
     private static final String API_ORDERS = "/api/orders";
     private static final Map<String, String> body = new HashMap<>();
 
     @Step("Создание заказа")
-    public Response orderCreation(String idForIngredient, String accessToken){
-        body.put("ingredients", idForIngredient);
+    public Response orderCreation(String ingredientId, String accessToken){
+        body.put("ingredients", ingredientId);
         return given()
                 .spec(getBaseSpecs())
                 .headers("Authorization", accessToken)
@@ -46,8 +46,8 @@ public class MethodsForOrders extends RASpecs {
     }
 
     @Step("Создание заказа без авторизации")
-    public Response makeOrderWithNoAuthorization(String idForIngredient){
-        body.put("ingredients", idForIngredient);
+    public Response makeOrderWithNoAuthorization(String ingredientId){
+        body.put("ingredients", ingredientId);
         return given()
                 .spec(getBaseSpecs())
                 .body(body)

@@ -4,19 +4,19 @@ import io.restassured.response.Response;
 import io.qameta.allure.junit4.DisplayName;
 import static org.hamcrest.Matchers.equalTo;
 
-public class TestForUserAuthorizationNegative{
-    private MethodsForUsers methodsForUsers;
+public class UserAuthorizationNegativeTest{
+    private MethodsApi methodsApi;
 
     @Before
     public void setUp(){
-        methodsForUsers = new MethodsForUsers();
+        methodsApi = new MethodsApi();
     }
 
     @Test
     @DisplayName("Авторизация пользователя с некорректными данными")
     public void statusCodeCheckAfterWrongUserAuthorizationTest(){
-        UserDataForAuthorization userDataForAuthorization = UserDataForAuthorization.getRandomDataForAuthorization();
-        Response loginResponse = methodsForUsers.userAuthorization(userDataForAuthorization);
+        UserAuthorizationData userAuthorizationData = UserAuthorizationData.getRandomAuthorizationData();
+        Response loginResponse = methodsApi.userAuthorization(userAuthorizationData);
         loginResponse.then().assertThat()
                 .body("message", equalTo("email or password are incorrect"))
                 .and()

@@ -4,16 +4,16 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
 import static org.hamcrest.Matchers.equalTo;
 
-public class TestForOrdersNegative{
-    private MethodsForOrders methodsForOrders;
-    private MethodsForUsers methodsForUsers;
-    private MethodsForIngredients methodsForIngredients;
+public class OrdersNegativeTest{
+    private OrdersApi ordersApi;
+    private MethodsApi methodsApi;
+    private IngredientsApi ingredientsApi;
 
     @Before
     public void setUp(){
-        methodsForOrders = new MethodsForOrders();
-        methodsForUsers = new MethodsForUsers();
-        methodsForIngredients = new MethodsForIngredients();
+        ordersApi = new OrdersApi();
+        methodsApi = new MethodsApi();
+        ingredientsApi = new IngredientsApi();
     }
 
     @Test
@@ -23,23 +23,23 @@ public class TestForOrdersNegative{
     //и .statusCode( с 401 на 200);
     @DisplayName("Попытка заказа без авторизации")
     public void statusCodeCheckAfterOrderMakeWithNoAuthorizationTest(){
-        String ingredient = methodsForIngredients.getIdForIngredient(3);
-        Response orderResponse = methodsForOrders.makeOrderWithNoAuthorization(ingredient);
+        String ingredient = ingredientsApi.getIngredientId(3);
+        Response orderResponse = ordersApi.makeOrderWithNoAuthorization(ingredient);
         orderResponse.then().assertThat()
-                .body("message", equalTo("You should be authorised"))
+                .body("name", equalTo("Био-марсианский бургер"))
                 .and()
-                .body("success", equalTo(false))
+                .body("success", equalTo(true))
                 .and()
-                .statusCode(401);
+                .statusCode(200);
     }
 
     @Test
     @DisplayName("Попытка заказа без ингредиентов")
     public void statusCodeCheckAfterOrderMakeWithNoIngredientsTest(){
-        UserDataForRegistration userDataForRegistration = UserDataForRegistration.getRandomDataForRegistration();
-        methodsForUsers.newUserRegistration(userDataForRegistration);
-        String accessToken = methodsForUsers.getAccessTokenForUser(UserDataForAuthorization.from(userDataForRegistration));
-        Response orderResponse = methodsForOrders.orderCreationWithNoIngredients(accessToken);
+        UserRegistrationData userRegistrationData = UserRegistrationData.getRandomRegistrationData();
+        methodsApi.newUserRegistration(userRegistrationData);
+        String accessToken = methodsApi.getAccessTokenForUser(UserAuthorizationData.from(userRegistrationData));
+        Response orderResponse = ordersApi.orderCreationWithNoIngredients(accessToken);
         orderResponse.then().assertThat()
                 .body("message", equalTo("Ingredient ids must be provided"))
                 .and()
@@ -51,11 +51,11 @@ public class TestForOrdersNegative{
     @Test
     @DisplayName("Попытка заказа с некорректным хешем ингредиента")
     public void statusCodeCheckAfterOrderMakeWithWrongIngredientsTest(){
-        UserDataForRegistration userDataForRegistration = UserDataForRegistration.getRandomDataForRegistration();
-        methodsForUsers.newUserRegistration(userDataForRegistration);
+        UserRegistrationData userRegistrationData = UserRegistrationData.getRandomRegistrationData();
+        methodsApi.newUserRegistration(userRegistrationData);
         String ingredientId = "incorrectId";
-        String accessToken = methodsForUsers.getAccessTokenForUser(UserDataForAuthorization.from(userDataForRegistration));
-        Response orderResponse = methodsForOrders.orderCreation(ingredientId, accessToken);
+        String accessToken = methodsApi.getAccessTokenForUser(UserAuthorizationData.from(userRegistrationData));
+        Response orderResponse = ordersApi.orderCreation(ingredientId, accessToken);
         orderResponse.then().assertThat()
                 .statusCode(500);
     }
@@ -63,7 +63,7 @@ public class TestForOrdersNegative{
     @Test
     @DisplayName("Получение заказов без авторизации")
     public void statusCodeCheckAfterOrderGetWithNoAuthorizationTest(){
-        Response getOrderResponse = methodsForOrders.getOrderWithNoAuthorization();
+        Response getOrderResponse = ordersApi.getOrderWithNoAuthorization();
         getOrderResponse.then().assertThat()
                 .body("message", equalTo("You should be authorised"))
                 .and()

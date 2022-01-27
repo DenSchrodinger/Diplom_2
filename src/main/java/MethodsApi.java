@@ -4,32 +4,32 @@ import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import static io.restassured.RestAssured.given;
 
-public class MethodsForUsers extends RASpecs {
+public class MethodsApi extends RASpecs{
     private static final String API_AUTH = "/api/auth/";
 
     @Step("Регистрация нового пользователя")
-    public Response newUserRegistration(UserDataForRegistration dataForRegistration){
+    public Response newUserRegistration(UserRegistrationData registrationData){
         return given()
                 .spec(getBaseSpecs())
-                .body(dataForRegistration)
+                .body(registrationData)
                 .when()
                 .post(API_AUTH + "register");
     }
 
     @Step("Регистрация нового пользователя с неверными данными")
-    public Response newUserRegistrationWithWrongData(String dataForRegistration){
+    public Response newUserRegistrationWithWrongData(String registrationData){
         return given()
                 .spec(getBaseSpecs())
-                .body(dataForRegistration)
+                .body(registrationData)
                 .when()
                 .post(API_AUTH + "register");
     }
 
     @Step("Получение accessToken пользователя после авторизации")
-    public String getAccessTokenForUser(UserDataForAuthorization dataForAuthorization){
+    public String getAccessTokenForUser(UserAuthorizationData authorizationData){
         return given()
                 .spec(getBaseSpecs())
-                .body(dataForAuthorization)
+                .body(authorizationData)
                 .when()
                 .post(API_AUTH + "login")
                 .then()
@@ -38,10 +38,10 @@ public class MethodsForUsers extends RASpecs {
     }
 
     @Step("Получение refreshToken пользователя после авторизации")
-    public String getRefreshTokenForUser(UserDataForAuthorization dataForAuthorization){
+    public String getRefreshTokenForUser(UserAuthorizationData authorizationData){
         return given()
                 .spec(getBaseSpecs())
-                .body(dataForAuthorization)
+                .body(authorizationData)
                 .when()
                 .post(API_AUTH + "login")
                 .then()
@@ -50,10 +50,10 @@ public class MethodsForUsers extends RASpecs {
     }
 
     @Step("Вход в систему")
-    public Response userAuthorization(UserDataForAuthorization dataForAuthorization){
+    public Response userAuthorization(UserAuthorizationData authorizationData){
         return given()
                 .spec(getBaseSpecs())
-                .body(dataForAuthorization)
+                .body(authorizationData)
                 .when()
                 .post(API_AUTH + "login");
     }
@@ -70,20 +70,20 @@ public class MethodsForUsers extends RASpecs {
     }
 
     @Step("Изменение пользователя")
-    public Response userChange(UserDataForRegistration dataForRegistration, String accessToken){
+    public Response userChange(UserRegistrationData registrationData, String accessToken){
         return given()
                 .spec(getBaseSpecs())
                 .headers("Authorization", accessToken)
-                .body(dataForRegistration)
+                .body(registrationData)
                 .when()
                 .patch(API_AUTH + "user");
     }
 
     @Step("Изменение пользователя без авторизации")
-    public Response userChangeWithNoAuthorization(UserDataForRegistration dataForRegistration){
+    public Response userChangeWithNoAuthorization(UserRegistrationData registrationData){
         return given()
                 .spec(getBaseSpecs())
-                .body(dataForRegistration)
+                .body(registrationData)
                 .when()
                 .patch(API_AUTH + "user");
     }

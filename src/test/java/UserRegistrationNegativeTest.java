@@ -4,20 +4,20 @@ import io.restassured.response.Response;
 import io.qameta.allure.junit4.DisplayName;
 import static org.hamcrest.Matchers.*;
 
-public class TestForUserRegistrationNegative {
-    private MethodsForUsers methodsForUsers;
+public class UserRegistrationNegativeTest{
+    private MethodsApi methodsApi;
 
     @Before
     public void setUp(){
-        methodsForUsers = new MethodsForUsers();
+        methodsApi = new MethodsApi();
     }
 
     @Test
     @DisplayName("Регистрация нового пользователя с ранее созданными данными")
     public void statusCodeCheckAfterSecondUserWithSameParametersRegistrationTest(){
-        UserDataForRegistration userDataForRegistration = UserDataForRegistration.getRandomDataForRegistration();
-        methodsForUsers.newUserRegistration(userDataForRegistration);
-        Response registrationResponse = methodsForUsers.newUserRegistration(userDataForRegistration);
+        UserRegistrationData userRegistrationData = UserRegistrationData.getRandomRegistrationData();
+        methodsApi.newUserRegistration(userRegistrationData);
+        Response registrationResponse = methodsApi.newUserRegistration(userRegistrationData);
         registrationResponse.then().assertThat()
                 .body("message", equalTo("User already exists"))
                 .and()
@@ -30,7 +30,7 @@ public class TestForUserRegistrationNegative {
     @DisplayName("Регистрация нового пользователя без поля почта")
     public void statusCodeCheckForNewUserWithNoLoginRegistrationTest(){
         String bodyWithoutEmail = "{\"password\":\"somepassword\",\"name\":\"somename\"}";
-        Response registrationResponse = methodsForUsers.newUserRegistrationWithWrongData(bodyWithoutEmail);
+        Response registrationResponse = methodsApi.newUserRegistrationWithWrongData(bodyWithoutEmail);
         registrationResponse.then().assertThat()
                 .body("message", equalTo("Email, password and name are required fields"))
                 .and()
@@ -43,7 +43,7 @@ public class TestForUserRegistrationNegative {
     @DisplayName("Регистрация нового пользователя без поля пароль")
     public void statusCodeCheckForNewUserWithNoPasswordRegistrationTest(){
         String bodyWithoutEmail = "{\"email\":\"email@test.ru\",\"name\":\"somename\"}";
-        Response registrationResponse = methodsForUsers.newUserRegistrationWithWrongData(bodyWithoutEmail);
+        Response registrationResponse = methodsApi.newUserRegistrationWithWrongData(bodyWithoutEmail);
         registrationResponse.then().assertThat()
                 .body("message", equalTo("Email, password and name are required fields"))
                 .and()
@@ -56,7 +56,7 @@ public class TestForUserRegistrationNegative {
     @DisplayName("Регистрация нового пользователя без поля имя")
     public void statusCodeCheckForNewUserWithNoNameRegistrationTest(){
         String bodyWithoutEmail = "{\"email\":\"email@test.ru\",\"password\":\"somepassword\"}";
-        Response registrationResponse = methodsForUsers.newUserRegistrationWithWrongData(bodyWithoutEmail);
+        Response registrationResponse = methodsApi.newUserRegistrationWithWrongData(bodyWithoutEmail);
         registrationResponse.then().assertThat()
                 .body("message", equalTo("Email, password and name are required fields"))
                 .and()

@@ -4,19 +4,19 @@ import io.restassured.response.Response;
 import io.qameta.allure.junit4.DisplayName;
 import static org.hamcrest.Matchers.*;
 
-public class TestForUserRegistration{
-    private MethodsForUsers methodsForUsers;
+public class UserRegistrationTest{
+    private MethodsApi methodsApi;
 
     @Before
     public void setUp(){
-        methodsForUsers = new MethodsForUsers();
+        methodsApi = new MethodsApi();
     }
 
     @Test
     @DisplayName("Регистрация нового пользователя")
     public void statusCodeCheckForNewUserRegistrationTest(){
-        UserDataForRegistration userDataForRegistration = UserDataForRegistration.getRandomDataForRegistration();
-        Response registrationResponse = methodsForUsers.newUserRegistration(userDataForRegistration);
+        UserRegistrationData userRegistrationData = UserRegistrationData.getRandomRegistrationData();
+        Response registrationResponse = methodsApi.newUserRegistration(userRegistrationData);
         registrationResponse.then().assertThat()
                 .body("success", equalTo(true))
                 .and()

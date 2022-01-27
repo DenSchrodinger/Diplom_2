@@ -1,0 +1,8 @@
+UserAuthorizationTest.class
+UserChangeNegativeTest.class
+UserRegistrationTest.class
+OrdersNegativeTest.class
+UserAuthorizationNegativeTest.class
+UserChangeTest.class
+UserRegistrationNegativeTest.class
+OrdersTest.class
